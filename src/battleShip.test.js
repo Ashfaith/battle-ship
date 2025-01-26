@@ -21,3 +21,20 @@ test('produces a 2d array representing the gameboard grid', () => {
     })
 });
 
+test('"Ship" is placed within the board with the correct length', () => {
+    const gameboard = new Gameboard();
+
+    ['horizontal', 'vertical'].forEach(direction => {
+        const shipPos = gameboard.placeShip(3, direction, 0, 0);
+        
+        if (shipPos.direction === 'horizontal'){
+            for (let i = 0; i < shipPos.length; i++){
+                expect(gameboard.board[x][y + i]).toBe('1')
+            }
+        } else if (shipPos.direction === 'vertical') {
+            for (let i = 0; i < shipPos.length; i++){
+                expect(gameboard.board[x + i][y]).toBe('1')
+            }
+        }
+    })
+})
