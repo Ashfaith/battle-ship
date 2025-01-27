@@ -37,4 +37,18 @@ test('"Ship" is placed within the board with the correct length', () => {
             }
         }
     })
-})
+});
+
+test('If position on board is empty, returns "miss"', () => {
+    const gameboard = new Gameboard();
+
+    expect(gameboard.receiveAttack('a', 1)).toBe('miss');
+});
+
+test('If position on board contains ship object, runs hit function', () => {
+    const gameboard = new Gameboard();
+
+    gameboard.placeShip(3, 'vertical', 0, 0);
+
+    expect(gameboard.receiveAttack('a', 1)).toBe('hit');
+});

@@ -30,7 +30,8 @@ class Gameboard {
     constructor(){
         this.rows = 10;
         this.cols = 10;
-        this.board = Array.from({ length: this.rows }, () => new Array(this.cols).fill("."));
+        this.board = Array.from({ length: this.rows }, () => new Array(this.cols).fill(null));
+        this.ships = [];
     }
 
     placeShip(shipLength, direction, x, y){
@@ -45,9 +46,8 @@ class Gameboard {
 
             //place into arrays
             for (let i = 0; i < ship.length; i++){
-                this.board[x][y + i] = '1';
+                this.board[x][y + i] = ship;
             }
-            console.log(this.board);
         } else {
             //check if ship fits into board
             if (x < 0 || x > this.rows) {
@@ -56,18 +56,32 @@ class Gameboard {
 
             //place into arrays
             for (let i = 0; i < ship.length; i++){
-                this.board[x + i][y] = '1';
+                this.board[x + i][y] = ship;
             }
-            console.log(this.board);
         }
-
+        this.ships.push(ship);
         return ship;
+    }
+
+    receiveAttack(letter, number){
+        //convert letters from top of board to a number
+        const col = letter.charCodeAt(0) - 97;
+        const row = number - 1;
+
+        const target = this.board[row][col];
+
+        if (target !== null){
+            return target.receivedHits();
+        } else {
+            return 'miss';
+        }
     }
 }
 
 const gameboard = new Gameboard;
 // gameboard.board[0][5] = 1
 // console.log(gameboard.board)
-gameboard.placeShip(3, 'vertical', 3, 3);
+gameboard.placeShip(3, 'vertical', 0, 0);
+gameboard.receiveAttack('a', 1);
 
 module.exports = { Ship, Gameboard };
