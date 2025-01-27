@@ -68,12 +68,19 @@ class Gameboard {
         const col = letter.charCodeAt(0) - 97;
         const row = number - 1;
 
-        const target = this.board[row][col];
+        let target = this.board[row][col];
 
         if (target !== null){
             return target.receivedHits();
         } else {
-            return 'miss';
+            target = 'miss';
+            return target;
+        }
+    }
+
+    allShipsSunk(){
+        if (this.ships.every(ship => ship.sunk === true)){ 
+            return 'game over'
         }
     }
 }

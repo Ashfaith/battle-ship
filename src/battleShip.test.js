@@ -39,7 +39,7 @@ test('"Ship" is placed within the board with the correct length', () => {
     })
 });
 
-test('If position on board is empty, returns "miss"', () => {
+test('If position on board is empty, updates cell to "miss"', () => {
     const gameboard = new Gameboard();
 
     expect(gameboard.receiveAttack('a', 1)).toBe('miss');
@@ -51,4 +51,15 @@ test('If position on board contains ship object, runs hit function', () => {
     gameboard.placeShip(3, 'vertical', 0, 0);
 
     expect(gameboard.receiveAttack('a', 1)).toBe('hit');
+});
+
+test('when all ships on board are sunk return true', () => {
+    const gameboard = new Gameboard();
+
+    gameboard.placeShip(3, 'vertical', 0, 0);
+    gameboard.receiveAttack('a', 1);
+    gameboard.receiveAttack('a', 2);
+    gameboard.receiveAttack('a', 3);
+
+    expect(gameboard.allShipsSunk()).toBe('game over');
 });
