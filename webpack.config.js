@@ -1,7 +1,5 @@
-// webpack.config.js
-// webpack.config.js
-const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
 
 module.exports = {
   mode: "development",
@@ -11,9 +9,17 @@ module.exports = {
     path: path.resolve(__dirname, "dist"),
     clean: true,
   },
+  devServer: {
+    static: {
+      directory: path.resolve(__dirname, 'dist'), 
+    },
+    port: 8080, 
+    open: true, 
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/template.html",
+      inject: "body",
     }),
   ],
   module: {
