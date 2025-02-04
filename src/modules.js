@@ -11,6 +11,7 @@ class Ship {
         if (this.sunk === true){ 
             return "sunk";
         } else {
+            console.log("hit");
             return "hit";
         }
     }
@@ -60,10 +61,10 @@ class Gameboard {
         return ship;
     }
 
-    receiveAttack(letter, number){
+    receiveAttack(coords){
         //convert letters from top of board to a number
-        const col = letter.charCodeAt(0) - 97;
-        const row = number - 1;
+        const row = coords[0];
+        const col = coords[1];
 
         let target = this.board[row][col];
 
@@ -71,6 +72,7 @@ class Gameboard {
             return target.receivedHits();
         } else {
             target = 'miss';
+            console.log(target);
             return target;
         }
     }
@@ -85,14 +87,8 @@ class Gameboard {
 class Player {
     constructor(player){
         this.player = player;
-        this.gameboard = new Gameboard;
+        this.gameBoard = new Gameboard;
     }
 }
-
-const gameboard = new Gameboard;
-// gameboard.board[0][5] = 1
-// console.log(gameboard.board)
-gameboard.placeShip(3, 'vertical', 0, 0);
-gameboard.receiveAttack('a', 1);
 
 module.exports = { Ship, Gameboard, Player };

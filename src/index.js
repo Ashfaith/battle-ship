@@ -1,11 +1,11 @@
 console.log('app.js loaded');
 
-import Display from'./display';
+import  { domContentLoader } from'./display';
 import "./styles.css";
 
-const display = new Display;
-display.setupGameStart();
+const startGameButton = document.querySelector('#start-game');
+startGameButton.addEventListener('click', () => {
+    domContentLoader();
+});
 
-
-
-
+//test

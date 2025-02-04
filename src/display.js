@@ -1,57 +1,53 @@
-import GameState from "./gameState";
+import { createGameState } from './controller';
+
+export const domContentLoader = () => {
+//create container for both boards
+    const boardContainer = document.createElement('div');
+    boardContainer.classList.add('board-container');
+    document.body.appendChild(boardContainer);
+    
+    const gameState = createGameState();
+    //place ships
+    gameState.shipPlaceChooser(); 
+
+    //generate board for each player
+    renderBoard(gameState.playerOne);
+    renderBoard(gameState.playerTwo);
+
+    gameState.gamePlay();
+
+}
+
+const renderBoard = (player) => {
+
+    const boardContainer = document.querySelector('.board-container');
+    //Create the game boards
+    const playerBoard = document.createElement('div');
+    playerBoard.classList.add(`${player.player}Board`);
+    boardContainer.appendChild(playerBoard);
 
 
-export default class Display {
-    constructor(gameState = new GameState) {
-        this.gameState = gameState;
-    }
-
-    setupGameStart() {
-        const startGameButton = document.querySelector('#start-game');
-        
-        startGameButton.addEventListener('click', () => {
+    const populateGameBoard = (player, playerBoard) => {
+        //Populate game board
+        player.gameBoard.board.forEach((row, index) => {
+            // Container for each row
+            const rowDiv = document.createElement('div');
+            //add class and number to each row
+            rowDiv.classList.add('row');
+            rowDiv.id = index;
             
-            this.gameState.shipPlaceChooser(); 
-
-            this.generateBoards(this.gameState.playerOne, this.gameState.playerTwo);
+            row.forEach((element, index) => {
+                const coord = document.createElement('div');
+                coord.classList.add('co-ord');
+                coord.id = `${rowDiv.id} ${index}`;
+                
+                //change to ships/markers later
+                coord.innerHTML = element;
+                rowDiv.appendChild(coord);
+            });
+            playerBoard.appendChild(rowDiv);
         });
     }
-
-    generateBoards(playerOne, playerTwo){
-
-        const boardContainer = document.createElement('div');
-        boardContainer.classList.add('board-container');
-        document.body.appendChild(boardContainer);
-        
-        //Create the game boards
-        const playerOneBoard = document.createElement('div');
-        playerOneBoard.classList.add('player-board');
-        boardContainer.appendChild(playerOneBoard);
-
-        const playerTwoBoard = document.createElement('div');
-        playerTwoBoard.classList.add('player-board');
-        boardContainer.appendChild(playerTwoBoard);
-
-        const populateGameBoard = (player, board) => {
-            //Populate game board
-            player.gameboard.board.forEach(row => {
-                // Container for each row
-                const rowDiv = document.createElement('div');
-                
-                rowDiv.classList.add('row');
-        
-                row.forEach(element => {
-                    const coord = document.createElement('div');
-                    coord.classList.add('co-ord');
-                    coord.innerHTML = element;
-                    rowDiv.appendChild(coord);
-                });
-                board.appendChild(rowDiv);
-            });
-        }
-
-        populateGameBoard(playerOne, playerOneBoard);
-        populateGameBoard(playerTwo, playerTwoBoard);
-
-    }
+    populateGameBoard(player, playerBoard);
+    
 }
