@@ -1,4 +1,4 @@
-import { createGameState } from './controller';
+import { createGameState, gameController } from './controller';
 
 export const domContentLoader = () => {
 //create container for both boards
@@ -14,8 +14,7 @@ export const domContentLoader = () => {
     renderBoard(gameState.playerOne);
     renderBoard(gameState.playerTwo);
 
-    gameState.gamePlay();
-
+    gameController(gameState.playerOne, gameState.playerTwo);
 }
 
 const renderBoard = (player) => {
@@ -23,7 +22,8 @@ const renderBoard = (player) => {
     const boardContainer = document.querySelector('.board-container');
     //Create the game boards
     const playerBoard = document.createElement('div');
-    playerBoard.classList.add(`${player.player}Board`);
+    playerBoard.classList.add('board');
+    playerBoard.id = (`${player.player}Board`);
     boardContainer.appendChild(playerBoard);
 
 

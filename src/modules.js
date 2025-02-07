@@ -11,7 +11,6 @@ class Ship {
         if (this.sunk === true){ 
             return "sunk";
         } else {
-            console.log("hit");
             return "hit";
         }
     }
@@ -63,23 +62,22 @@ class Gameboard {
 
     receiveAttack(coords){
         //convert letters from top of board to a number
-        const row = coords[0];
-        const col = coords[1];
+        const [row, col] = coords;
 
         let target = this.board[row][col];
+        console.log(this.board);
 
         if (target !== null){
             return target.receivedHits();
         } else {
-            target = 'miss';
-            console.log(target);
-            return target;
+            this.board[row][col] = 'miss';
+            return 'miss';
         }
     }
 
     allShipsSunk(){
         if (this.ships.every(ship => ship.sunk === true)){ 
-            return 'game over'
+            return 'game over';
         }
     }
 }
