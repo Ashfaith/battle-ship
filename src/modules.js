@@ -65,7 +65,6 @@ class Gameboard {
         const [row, col] = coords;
 
         let target = this.board[row][col];
-        console.log(this.board);
 
         if (target !== null){
             return target.receivedHits();

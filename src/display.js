@@ -17,9 +17,9 @@ export const domContentLoader = () => {
     gameController(gameState.playerOne, gameState.playerTwo);
 }
 
-const renderBoard = (player) => {
-
+export const renderBoard = (player) => {
     const boardContainer = document.querySelector('.board-container');
+
     //Create the game boards
     const playerBoard = document.createElement('div');
     playerBoard.classList.add('board');
@@ -41,8 +41,13 @@ const renderBoard = (player) => {
                 coord.classList.add('co-ord');
                 coord.id = `${rowDiv.id} ${index}`;
                 
-                //change to ships/markers later
-                coord.innerHTML = element;
+                //change to ships/markers later 
+                // console.log(element);
+                if (element !== null) {
+                    coord.innerHTML = element.hits;
+                } else {
+                    coord.innerHTML = element;
+                }
                 rowDiv.appendChild(coord);
             });
             playerBoard.appendChild(rowDiv);
@@ -50,4 +55,18 @@ const renderBoard = (player) => {
     }
     populateGameBoard(player, playerBoard);
     
+}
+
+export const updateSquareDisplay = (attackResult, target) => {
+    if (attackResult === 'miss'){
+        target.style.background = 'white';
+    } else if (attackResult === 'hit'){
+        target.style.background = 'red';
+    }
+}
+
+export const playAgain = () => {
+    const playAgainBtn = document.createElement('button');
+    playAgainBtn.innerText = 'Play again?';
+    document.body.appendChild(playAgainBtn);
 }
