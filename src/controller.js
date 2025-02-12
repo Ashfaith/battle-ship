@@ -32,34 +32,71 @@ export const createGameState = () => {
 export const gameController = (playerOne, playerTwo) => {
     let target;
     //attach listeners to all cells
-    // const boards = document.querySelectorAll('board');
     const cells = document.querySelectorAll('.co-ord');
     cells.forEach(cell => {
         cell.addEventListener('click', (e) => {
             //get the board selected
             const board = e.target.closest('.board').id;
             target = e.target;
+            console.log(target);
             //send target cell and board
             chooseCell(e.target.id, board);
             // console.log(e.target, board);
         });
     });
-    
-    const computerTurn = () => {
-        const randAttack = () => {
-            let x = numberGen();
-            let y = numberGen();
-            const choice = (`${x} ${y}`);
-            console.log(choice);
+
+    //Change computer logic to a class
+    const computerTurn = (attackResult) => {
+        let lastAttackResult = null;
+        let usedDirections = [];
+        let choice = null;
+        const directions = {
+            1: [-1, 0],
+            2: [1, 0],
+            3: [0, -1],
+            4: [0, 1],
+        };
+
+        const computerAttack = () => {
+            if (lastAttackResult === 'hit'){
+                console.log('this shit working');
+                previousShotHit();
+            } else {
+                randAttack();
+            }
+        }
+
+        const fireCompAttack = (x, y) => {
+            console.log(`what is the lastAttackResult ${lastAttackResult}`)
+            choice = (`${x} ${y}`);
+            target = document.getElementById(choice);
             chooseCell(choice, 'playerOneBoard');
         }
 
-        const numberGen = () => {
-            return Math.floor(Math.random() * 10);
+        const randAttack = () => {
+            const x = numberGen(0, 9);
+            const y = numberGen(0, 9);
+            fireCompAttack(x, y);
+        }
+
+        const previousShotHit = () => {
+            const randInt = numberGen(1, 4);
+            let nextMoveAround = directions[randInt];
+            const x = lastAttackResult[0] + nextMoveAround[0];
+            const y = lastAttackResult[1] + nextMoveAround[1];
+            fireCompAttack(x, y);
+        }
+
+        const numberGen = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        if (attackResult) {
+            lastAttackResult = attackResult;
         }
 
         return {
-            randAttack,
+            computerAttack,
         };
     };
 
@@ -72,7 +109,7 @@ export const gameController = (playerOne, playerTwo) => {
     const switchPlayer = () => {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
         if (activePlayer.player === 'computer' && computer){
-            computer.randAttack();
+            computer.computerAttack();
         }
     };
 
@@ -91,6 +128,10 @@ export const gameController = (playerOne, playerTwo) => {
         };
         const attackResult = otherPlayer.gameBoard.receiveAttack(cellArray);
         console.log(attackResult);
+
+        if (otherPlayer === playerTwo && playerTwo.player === 'computer') {
+            computerTurn(attackResult);
+        }
         
         gameStatus(otherPlayer);
         updateSquareDisplay(attackResult, target);
