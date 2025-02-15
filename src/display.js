@@ -60,7 +60,7 @@ export const renderBoard = (player) => {
 export const updateSquareDisplay = (attackResult, target) => {
     if (attackResult === 'miss'){
         target.style.background = 'white';
-    } else if (attackResult === 'hit'){
+    } else if (attackResult === 'hit' || attackResult === 'sunk'){
         target.style.background = 'red';
     }
 }
