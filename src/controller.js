@@ -30,7 +30,6 @@ export const createGameState = () => {
 }
 
 export const gameController = (playerOne, playerTwo) => {
-    let target;
     // attach listeners to all cells
     const cells = document.querySelectorAll('.co-ord');
     cells.forEach(cell => {

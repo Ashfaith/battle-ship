@@ -94,9 +94,8 @@ class Computer extends Player {
     constructor() {
         super('computer');
         this.lastAttackResult = null;
-        this.previousChoice = null;
+        this.previousHit = null;
         this.choice = null;
-        this.initHit = null;
         this.previousDirection = null;
         this.directions = {
             1: [-1, 0],//up
@@ -107,17 +106,39 @@ class Computer extends Player {
         this.usedDirections = [];
     }
 
+    conditionsMet() {
+        console.log('last attack:',this.lastAttackResult,'previous hit:', this.previousHit,'choice just made:', this.choice,'direction chosen:', this.previousDirection,'directions used:', this.usedDirections);
+    }
+
     async computerAttack() {
-        if (this.lastAttackResult === 'miss' && this.usedDirections.length < 4 && this.initHit){
-            this.previousChoice = this.initHit;
+        if (this.lastAttackResult === 'sunk'){
+            this.usedDirections.length = 0;
+            this.previousHit = null;
+            this.previousDirection = null;
+            this.randAttack();
+        }
+
+        if (this.lastAttackResult === 'hit'){
+            this.usedDirections.length = 0;
+            this.previousHit = this.choice;
             this.previousHitAttack();
         }
 
-        else if (this.lastAttackResult === 'hit') {
+        else if (this.usedDirections.length >= 4 && this.previousHit){
             this.usedDirections.length = 0;
-            this.initHit = this.choice;
+            this.previousHit = null;
+            this.previousDirection = null;
+            this.randAttack();
+        }
+
+        else if (this.lastAttackResult === 'go again' && this.previousHit) {
+            this.previousHitAttack();
+        }
+
+        else if (this.lastAttackResult === 'miss' && this.usedDirections.length < 4 && this.previousHit){
             this.previousHitAttack();
         } 
+
         else {
             this.randAttack();
         }
@@ -127,19 +148,19 @@ class Computer extends Player {
         const x = this.numberGen(0, 9);
         const y = this.numberGen(0, 9);
         this.choice = `${x} ${y}`;
-        this.previousChoice = this.choice;
     }
 
     async previousHitAttack() {
         let randInt = this.numberGen(1, 4);
         let nextMoveAround = [];
-        
+
+
         if (this.lastAttackResult === 'hit' && this.previousDirection !== null){
             nextMoveAround = this.previousDirection;
+            this.previousHit = this.choice;
         } else {
             //check to see if direction has already been used
             do { 
-                this.previousChoice = this.initHit
                 randInt = this.numberGen(1, 4);
                 nextMoveAround = this.directions[randInt];
                 this.previousDirection = nextMoveAround;
@@ -147,7 +168,7 @@ class Computer extends Player {
         }
 
         this.usedDirections.push(nextMoveAround);
-        const [prevX, prevY] = this.previousChoice.split(' ').map(Number);
+        const [prevX, prevY] = this.previousHit.split(' ').map(Number);
         const x = prevX + nextMoveAround[0];
         const y = prevY + nextMoveAround[1];
         this.choice = `${x} ${y}`;
