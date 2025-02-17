@@ -3,31 +3,32 @@ import { domContentLoader, playAgain, renderBoard, updateSquareDisplay } from'./
 
 
 export const createGameState = () => {
+    const initShips = () => {
+        return [
+        new Ship(5),
+        new Ship(4),
+        new Ship(3),
+        new Ship(3),
+        new Ship(2)
+        ];
+    };
+
     const playerOne = new Player('playerOne');
     const playerTwo = new Player('computer');
-
+    let ships = initShips();
 
     const shipPlaceChooser = () => {
-        playerOne.gameBoard.placeShip(5, 'vertical', 1, 1);
-        playerOne.gameBoard.placeShip(4, 'vertical', 1, 8);
-        playerOne.gameBoard.placeShip(3, 'horizontal', 4, 4);
-        playerOne.gameBoard.placeShip(3, 'horizontal', 8, 1);
-        playerOne.gameBoard.placeShip(2, 'horizontal', 6, 7);
-
-        playerTwo.gameBoard.placeShip(5, 'vertical', 1, 0);
-        // playerTwo.gameBoard.placeShip(4, 'vertical', 2, 9);
-        // playerTwo.gameBoard.placeShip(3, 'horizontal', 3, 4);
-        // playerTwo.gameBoard.placeShip(3, 'horizontal', 8, 1);
-        // playerTwo.gameBoard.placeShip(2, 'horizontal', 5, 7);
+        
     };
 
 
     return {
+        ships,
         playerOne,
         playerTwo,
         shipPlaceChooser,
-    }
-}
+    };
+};
 
 export const gameController = (playerOne, playerTwo) => {
     // attach listeners to all cells

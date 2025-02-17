@@ -1,7 +1,7 @@
 class Ship {
-    constructor(length, hits = 0){
+    constructor(length){
         this.length = length;
-        this.hits = hits;
+        this.hits = length;
         this.sunk = false;
     }
 
@@ -106,8 +106,11 @@ class Computer extends Player {
         this.usedDirections = [];
     }
 
-    conditionsMet() {
-        console.log('last attack:',this.lastAttackResult,'previous hit:', this.previousHit,'choice just made:', this.choice,'direction chosen:', this.previousDirection,'directions used:', this.usedDirections);
+    outOfRange(x, y) {
+        if (x < 0 || x >= 10 || y < 0 || y >= 10) {
+            return true;
+        }
+        return false;
     }
 
     async computerAttack() {
@@ -172,6 +175,12 @@ class Computer extends Player {
         const x = prevX + nextMoveAround[0];
         const y = prevY + nextMoveAround[1];
         this.choice = `${x} ${y}`;
+
+        if (!this.outOfRange(x, y)) {
+            this.choice = `${x} ${y}`;
+        } else {
+            this.previousHitAttack();
+        }
     }
 
     numberGen(min, max) {
