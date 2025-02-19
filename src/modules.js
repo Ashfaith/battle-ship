@@ -1,6 +1,7 @@
 class Ship {
-    constructor(length){
+    constructor(length, name){
         this.length = length;
+        this.name = name;
         this.hits = length;
         this.sunk = false;
     }
@@ -31,8 +32,8 @@ class Gameboard {
         this.ships = [];
     }
 
-    placeShip(shipLength, direction, x, y){
-        const ship = new Ship(shipLength);
+    placeShip(direction, x, y, ship){
+        console.log(x, y);
         
         //check which way ship is facing
         if(direction === 'horizontal'){
@@ -42,7 +43,7 @@ class Gameboard {
             }
 
             //place into arrays
-            for (let i = 0; i < ship.length; i++){
+            for (let i = 0; i < ship.length; i++) {
                 this.board[x][y + i] = ship;
             }
         } else {
@@ -52,12 +53,12 @@ class Gameboard {
             }
 
             //place into arrays
-            for (let i = 0; i < ship.length; i++){
+            for (let i = 0; i < ship.length; i++) {
                 this.board[x + i][y] = ship;
             }
-        }
         this.ships.push(ship);
-        return ship;
+        console.log(this.ships);
+        }
     }
 
     receiveAttack(coords){

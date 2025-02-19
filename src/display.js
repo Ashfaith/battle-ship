@@ -12,7 +12,7 @@ export const domContentLoader = () => {
     renderBoardContainer();
     renderBoard(gameState.playerOne);
     renderBoard(gameState.playerTwo);
-    dragShip();
+    dragShip(gameState);
 
     gameController(gameState.playerOne, gameState.playerTwo);
 }
@@ -69,39 +69,55 @@ const renderDock = (ships) => {
         const shipContainer = document.createElement('div');
         shipContainer.classList.add('shipContainer');
         shipContainer.setAttribute('draggable', true);
-        shipContainer.ship = ship; 
+        shipContainer.id = ship.name;
+        console.log(ship.name);
+        shipContainer.shipData = ship;
 
         dock.appendChild(shipContainer);
 
-        for (let i = 0; i < ship.length; i++){
-        const shipSquare = document.createElement('div');
-        shipSquare.classList.add('shipSquare');
-        shipContainer.appendChild(shipSquare);
-        };
+        for (let i = 0; i < ship.length; i++) {
+            const shipSquare = document.createElement('div');
+            shipSquare.classList.add('shipSquare');
+            shipContainer.appendChild(shipSquare);
+        }
     });
 };
 
-const dragShip = () => {
+const dragShip = (gameState) => {
     const draggableShips = document.querySelectorAll('.shipContainer');
+    const playerBoard = document.querySelector('#playerOneBoard');
 
     draggableShips.forEach(ship => {
         ship.addEventListener('dragstart', e => {
-            e.dataTransfer.setData('text/plain', e.target.ship);
+            e.dataTransfer.setData('text/plain', ship.id); 
         });
     });
 
-    const playerBoard = document.querySelector('#playerOneBoard');
-
-    if (playerBoard){
-        const playerSquares = playerBoard.querySelectorAll('.co-ord');
-        playerSquares.forEach(square => {
-            square.addEventListener('dragover', e => {
-                e.preventDefault();
-                square.classList.add('green');
-            });
+    let direction = 'vertical';
+    
+    for (const playerSquares of playerBoard.querySelectorAll('.co-ord')) {
+        playerSquares.addEventListener('dragover', e => {
+            e.preventDefault();
         });
-    };
+
+        playerSquares.addEventListener('drop', e => {
+            e.preventDefault();
+
+            const shipData = e.dataTransfer.getData('text/plain');
+            const shipElement = document.getElementById(shipData);
+            const ship = shipElement.shipData;
+
+            const startCoord = playerSquares.id.split(' ').map(coord => parseInt(coord));
+            console.log(startCoord);
+            
+            gameState.playerOne.gameBoard.placeShip(direction, startCoord[0], startCoord[1], ship);
+
+            playerSquares.appendChild(shipElement);
+            shipElement.shipData = ship;
+        });
+    }
 };
+
 
 export const updateSquareDisplay = (attackResult, target) => {
     if (attackResult === 'miss'){

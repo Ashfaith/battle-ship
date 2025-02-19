@@ -5,11 +5,11 @@ import { domContentLoader, playAgain, renderBoard, updateSquareDisplay } from'./
 export const createGameState = () => {
     const initShips = () => {
         return [
-        new Ship(5),
-        new Ship(4),
-        new Ship(3),
-        new Ship(3),
-        new Ship(2)
+        new Ship(5, 'carrier'),
+        new Ship(4, 'battleship'),
+        new Ship(3, 'cruiser'),
+        new Ship(3, 'submarine'),
+        new Ship(2, 'destroyer')
         ];
     };
 
@@ -118,7 +118,7 @@ export const gameController = (playerOne, playerTwo) => {
 
     const gameOver = () => {
         playAgain();
-        console.log(`${activePlayer} wins`);
+        console.log(`${activePlayer.player} wins`);
     };
 
     return {
