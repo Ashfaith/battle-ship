@@ -28,9 +28,27 @@ body {
 
 .dock {
   display: flex;
+  flex-direction: row;
   border: 2px solid black;
   width: 500px;
-  height: auto;
+  max-height: 500px;
+}
+
+.dock.horizontal{
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+}
+
+.ship-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid blue;
+}
+
+.ship-container.horizontal {
+  flex-direction: row;
+  min-width: fit-content;
 }
 
 .shipSquare {

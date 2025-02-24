@@ -3,6 +3,9 @@ import { domContentLoader, playAgain, renderBoard, updateSquareDisplay } from'./
 
 
 export const createGameState = () => {
+    const playerOne = new Player('playerOne');
+    const playerTwo = new Player('computer');
+
     const initShips = () => {
         return [
         new Ship(5, 'carrier'),
@@ -13,12 +16,16 @@ export const createGameState = () => {
         ];
     };
 
-    const playerOne = new Player('playerOne');
-    const playerTwo = new Player('computer');
+    
     let ships = initShips();
 
-    const shipPlaceChooser = () => {
-        
+    const computerShipsRand = () => {
+        // Call initShips
+        //Loop through each ship
+            // Randomly create x and y coords
+            // Randomly choose direction
+            // Call placeShip()
+            // Edge case for collisions
     };
 
 

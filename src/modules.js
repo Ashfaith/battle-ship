@@ -33,7 +33,7 @@ class Gameboard {
     }
 
     placeShip(direction, x, y, ship){
-        console.log(x, y);
+        console.log(this.board);
         
         //check which way ship is facing
         if(direction === 'horizontal'){
@@ -44,6 +44,10 @@ class Gameboard {
 
             //place into arrays
             for (let i = 0; i < ship.length; i++) {
+                if (this.checkCollision(x, y + i) === true){
+                    console.log('collision');
+                    return 'collision';
+                }
                 this.board[x][y + i] = ship;
             }
         } else {
@@ -54,10 +58,22 @@ class Gameboard {
 
             //place into arrays
             for (let i = 0; i < ship.length; i++) {
+                if (this.checkCollision(x + i, y) === true){
+                    console.log('collision');
+                    return 'collision';
+                }
                 this.board[x + i][y] = ship;
             }
         this.ships.push(ship);
         console.log(this.ships);
+        }
+    }
+
+    checkCollision(x, y) {
+        const collision = true;
+        if (this.board[x][y] !== null){
+            console.log('collision!');
+            return collision;
         }
     }
 
