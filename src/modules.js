@@ -32,50 +32,51 @@ class Gameboard {
         this.ships = [];
     }
 
-    placeShip(direction, x, y, ship){
-        console.log(this.board);
-        
-        //check which way ship is facing
-        if(direction === 'horizontal'){
-            //check if ship is placed within boundary of board
-            if (y < 0 || y > this.cols) {
-                throw new Error("Trying to access index out of bounds");
+    placeShip(direction, x, y, ship) {
+        // check which way ship is facing
+        if (direction === 'horizontal') {
+          // check if all positions are valid
+          for (let i = 0; i < ship.length; i++) {
+            const check = this.checkAllowed(x, y + i);
+            if (check === 'collision' || check === 'out of bounds') {
+              return check; 
             }
-
-            //place into arrays
-            for (let i = 0; i < ship.length; i++) {
-                if (this.checkCollision(x, y + i) === true){
-                    console.log('collision');
-                    return 'collision';
-                }
-                this.board[x][y + i] = ship;
-            }
+          }
+          
+          // place into arrays if valid
+          for (let i = 0; i < ship.length; i++) {
+            this.board[x][y + i] = ship;
+          }
         } else {
-            //check if ship fits into board
-            if (x < 0 || x > this.rows) {
-                throw new Error("Trying to access index out of bounds");
+          // check if all positions are valid
+          for (let i = 0; i < ship.length; i++) {
+            const check = this.checkAllowed(x + i, y);
+            if (check === 'collision' || check === 'out of bounds') {
+              return check;
             }
-
-            //place into arrays
-            for (let i = 0; i < ship.length; i++) {
-                if (this.checkCollision(x + i, y) === true){
-                    console.log('collision');
-                    return 'collision';
-                }
-                this.board[x + i][y] = ship;
-            }
+          }
+          
+          // place into arrays
+          for (let i = 0; i < ship.length; i++) {
+            this.board[x + i][y] = ship;
+          }
+        }
+        
+    
         this.ships.push(ship);
         console.log(this.ships);
-        }
-    }
+        return 'allowed';
+      }
 
-    checkCollision(x, y) {
-        const collision = true;
-        if (this.board[x][y] !== null){
-            console.log('collision!');
-            return collision;
+      checkAllowed(x, y) {
+        if (this.board[x] === undefined || y < 0 || y >= this.board[x].length) {
+          return 'out of bounds';
         }
-    }
+        if (this.board[x][y] !== null) {
+          return 'collision';
+        }
+        return 'allowed';
+      }
 
     receiveAttack(coords){
         //convert letters from top of board to a number

@@ -17,15 +17,32 @@ export const createGameState = () => {
     };
 
     
-    let ships = initShips();
+    const ships = initShips();
 
     const computerShipsRand = () => {
-        // Call initShips
-        //Loop through each ship
-            // Randomly create x and y coords
-            // Randomly choose direction
-            // Call placeShip()
-            // Edge case for collisions
+        // call initShips
+        const computerShips = initShips();
+        //loop through each ship
+        for (let i = 0; i < computerShips.length; i++) {
+            const directions = ['horizontal', 'vertical'];
+            const number = (max) => Math.floor(Math.random() * max);
+            
+            let placed = false;
+            
+            while (placed !== 'allowed') {
+                // randomly create x and y coords
+                const x = number(10);
+                const y = number(10);
+                // randomly choose direction
+                const direction = directions[number(2)];
+                
+                // call placeShip() and check placement
+                console.log(direction, x, y, computerShips[i]);
+                placed = playerTwo.gameBoard.placeShip(direction, x, y, computerShips[i]);
+                console.log(i, placed);
+            }
+        }
+        console.log(playerTwo.gameBoard.board);
     };
 
 
@@ -33,7 +50,7 @@ export const createGameState = () => {
         ships,
         playerOne,
         playerTwo,
-        shipPlaceChooser,
+        computerShipsRand,
     };
 };
 

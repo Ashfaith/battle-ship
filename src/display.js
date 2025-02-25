@@ -3,10 +3,8 @@ import { createGameState, gameController } from './controller';
 export const domContentLoader = () => {
     const gameState = createGameState();
     
-    renderDock(gameState.ships);
-    
-    //place ships
-    gameState.shipPlaceChooser(); 
+    renderDock(gameState.ships); //FIX THIS LINE, ASSIGN TO PLAYER 1
+    gameState.computerShipsRand();
 
     //generate board for each player
     renderBoardContainer();
@@ -53,11 +51,11 @@ const populateGameBoard = (player, playerBoard) => {
             coord.id = `${rowDiv.id} ${index}`;
             
             //change to ships/markers later 
-            if (element !== null) {
-                coord.innerHTML = element.hits;
-            } else {
-                coord.innerHTML = element;
-            }
+            // if (element !== null) {
+            //     coord.innerHTML = element.hits;
+            // } else {
+            //     coord.innerHTML = element;
+            // }
             rowDiv.appendChild(coord);
         });
         playerBoard.appendChild(rowDiv);
