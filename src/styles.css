@@ -2,12 +2,6 @@ body {
     background-color: rebeccapurple;
   }
 
-.co-ord {
-  width: 40px;
-  height: 40px;
-  border: 2px solid black;
-}
-
 .row {
   display: flex;
   flex-direction: row;
@@ -40,10 +34,22 @@ body {
   max-height: 500px;
 }
 
+.co-ord {
+  width: 40px;
+  height: 40px;
+  border: 2px solid black;
+  box-sizing: border-box; /* This ensures the border is included in the width/height */
+  position: relative; /* For positioning ships inside */
+}
+
 .ship-container {
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
-  border: 1px solid blue;
+  gap: 0; /* Ensures no gap between ship squares */
+  height: fit-content;
+  width: fit-content;
 }
 
 .ship-container.horizontal {
@@ -54,8 +60,9 @@ body {
 .shipSquare {
   width: 40px;
   height: 40px;
-  border: 2px solid black;
   background-color: black;
+  box-sizing: border-box; /* Match the box-sizing of the coordinates */
+  border: 2px solid transparent; /* Optional: adds some spacing between ship segments */
 }
 
 .green {

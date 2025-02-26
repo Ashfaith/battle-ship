@@ -49,13 +49,6 @@ const populateGameBoard = (player, playerBoard) => {
             const coord = document.createElement('div');
             coord.classList.add('co-ord');
             coord.id = `${rowDiv.id} ${index}`;
-            
-            //change to ships/markers later 
-            // if (element !== null) {
-            //     coord.innerHTML = element.hits;
-            // } else {
-            //     coord.innerHTML = element;
-            // }
             rowDiv.appendChild(coord);
         });
         playerBoard.appendChild(rowDiv);
@@ -150,8 +143,14 @@ export const updateSquareDisplay = (attackResult, target) => {
     if (attackResult === 'miss'){
         target.style.background = 'white';
     } else if (attackResult === 'hit' || attackResult === 'sunk'){
+        const shipSquare = target.querySelector('.shipSquare');
+    
+        if (shipSquare) {
+        shipSquare.style.backgroundColor = 'red';
+        } else {
         target.style.background = 'red';
-    };
+        }
+    }
 };
 
 export const playAgain = () => {

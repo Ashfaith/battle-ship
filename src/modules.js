@@ -2,7 +2,7 @@ class Ship {
     constructor(length, name){
         this.length = length;
         this.name = name;
-        this.hits = length;
+        this.hits = 0;
         this.sunk = false;
     }
 
@@ -64,7 +64,6 @@ class Gameboard {
         
     
         this.ships.push(ship);
-        console.log(this.ships);
         return 'allowed';
       }
 
@@ -83,7 +82,6 @@ class Gameboard {
         const [row, col] = coords;
 
         let target = this.board[row][col];
-        console.log(target);
 
         if (target !== null){
             return target.receivedHits();
@@ -163,6 +161,7 @@ class Computer extends Player {
         else {
             this.randAttack();
         }
+        console.log(this.choice);
     }
 
     randAttack() {
@@ -171,35 +170,43 @@ class Computer extends Player {
         this.choice = `${x} ${y}`;
     }
 
-    async previousHitAttack() {
-        let randInt = this.numberGen(1, 4);
-        let nextMoveAround = [];
-
-
-        if (this.lastAttackResult === 'hit' && this.previousDirection !== null){
+    previousHitAttack() {
+        // try each direction until a valid one or run out of directions
+        while (this.usedDirections.length < 4) {
+          let randInt;
+          let nextMoveAround;
+          
+          if (this.lastAttackResult === 'hit' && this.previousDirection !== null) {
             nextMoveAround = this.previousDirection;
             this.previousHit = this.choice;
-        } else {
-            //check to see if direction has already been used
-            do { 
-                randInt = this.numberGen(1, 4);
-                nextMoveAround = this.directions[randInt];
-                this.previousDirection = nextMoveAround;
-            } while (this.usedDirections.some(direction => direction === nextMoveAround));
-        }
-
-        this.usedDirections.push(nextMoveAround);
-        const [prevX, prevY] = this.previousHit.split(' ').map(Number);
-        const x = prevX + nextMoveAround[0];
-        const y = prevY + nextMoveAround[1];
-        this.choice = `${x} ${y}`;
-
-        if (!this.outOfRange(x, y)) {
+          } else {
+            // find a direction that hasn't been used yet
+            do {
+              randInt = this.numberGen(1, 4);
+              nextMoveAround = this.directions[randInt];
+            } while (
+              this.usedDirections.some(direction => 
+                direction[0] === nextMoveAround[0] && direction[1] === nextMoveAround[1]
+              )
+            );
+            
+            this.previousDirection = nextMoveAround;
+          }
+          
+          this.usedDirections.push(nextMoveAround);
+          
+          const [prevX, prevY] = this.previousHit.split(' ').map(Number);
+          const x = prevX + nextMoveAround[0];
+          const y = prevY + nextMoveAround[1];
+          
+          if (!this.outOfRange(x, y)) {
             this.choice = `${x} ${y}`;
-        } else {
-            this.previousHitAttack();
+            return;
+          }
         }
-    }
+        // fallback if all directions fail
+        this.randAttack();
+      }
 
     numberGen(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;

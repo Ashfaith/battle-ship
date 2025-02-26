@@ -37,12 +37,9 @@ export const createGameState = () => {
                 const direction = directions[number(2)];
                 
                 // call placeShip() and check placement
-                console.log(direction, x, y, computerShips[i]);
                 placed = playerTwo.gameBoard.placeShip(direction, x, y, computerShips[i]);
-                console.log(i, placed);
             }
         }
-        console.log(playerTwo.gameBoard.board);
     };
 
 
@@ -74,7 +71,6 @@ export const gameController = (playerOne, playerTwo) => {
 
     const switchPlayer = () => {
         activePlayer = activePlayer === playerOne ? playerTwo : playerOne;
-        console.log(`${activePlayer.player}'s turn!`);
         if (activePlayer.player === 'computer' && computer) {
             computerTurnHandler();
         }
@@ -124,9 +120,9 @@ export const gameController = (playerOne, playerTwo) => {
         let validity = false;
         // check if player has selected the correct board
         if (selectedBoard !== `${otherPlayer.player}Board`) {
-            console.log('incorrect board');
+            return validity;
         } else if (otherPlayer.cellsReceived.includes(cellId)) {
-            console.log('Already targeted, try again');
+            return validity;
         } else {
             validity = true;
         }
