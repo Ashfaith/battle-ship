@@ -3,8 +3,8 @@ console.log('app.js loaded');
 import  { domContentLoader } from'./display';
 import "./styles.css";
 
-const startGameButton = document.querySelector('#start-game');
-startGameButton.addEventListener('click', () => {
+const newGameButton = document.querySelector('#new-game');
+newGameButton.addEventListener('click', () => {
     domContentLoader();
 });
 

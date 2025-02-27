@@ -7,39 +7,89 @@ body {
   flex-direction: row;
 }
 
-.player-board {
+#game-container {
+  border: solid 1px yellow;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-board {
   border: 2px solid black;
   flex-direction: column;
   height: 100%;
 }
 
 .board-container{
+  height: 450px;
+  border: red solid 1px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+}
+
+#playerOne-tag {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+#computer-tag {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  justify-self: end;
+}
+
+#playerBoard {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+#computerBoard {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+.dock-container {
+  border: green 1px solid;
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  align-items: center;
 }
 
 .dock {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   border: 2px solid black;
-  width: 500px;
-  max-height: 500px;
+  height: 250px;
+  width: 250px;
+  gap: 10px;
 }
 
 .dock.horizontal{
   display: flex;
   flex-direction: column;
-  max-height: 500px;
+  height: 250px;
+  width: 250px;
 }
 
 .co-ord {
   width: 40px;
   height: 40px;
   border: 2px solid black;
-  box-sizing: border-box; /* This ensures the border is included in the width/height */
-  position: relative; /* For positioning ships inside */
+  box-sizing: border-box;
+  position: relative; 
+  transform-style: preserve-3d; /*keeps styling for game-board square on top*/
 }
 
 .ship-container {
@@ -47,9 +97,10 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 0; /* Ensures no gap between ship squares */
+  gap: 0; 
   height: fit-content;
   width: fit-content;
+  transform: translateZ(-10px); /*keeps styling for ships under gameboard so hit markers are displayed over top*/
 }
 
 .ship-container.horizontal {
@@ -61,10 +112,17 @@ body {
   width: 40px;
   height: 40px;
   background-color: black;
-  box-sizing: border-box; /* Match the box-sizing of the coordinates */
-  border: 2px solid transparent; /* Optional: adds some spacing between ship segments */
+  box-sizing: border-box; 
+  border: 2px solid transparent;
 }
 
-.green {
-  background-color: green;
+#rotate-button {
+  background: url("assets/svg/rotate-svgrepo-com.svg") no-repeat left top;
+  background-size: 100% 100%;
+  width: 50px;
+  height: 50px;
+  outline: none;
+  border: none;
 }
+
+

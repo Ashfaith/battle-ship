@@ -1,5 +1,7 @@
 import { createGameState, gameController } from './controller';
 
+const gameContainer = document.querySelector('#game-container');
+
 export const domContentLoader = () => {
     const gameState = createGameState();
     
@@ -22,16 +24,29 @@ const renderBoardContainer = () => {
     //create container for both boards
     const boardContainer = document.createElement('div');
     boardContainer.classList.add('board-container');
-    document.body.appendChild(boardContainer);
+    gameContainer.appendChild(boardContainer);
 }
 
+const formatPlayerName = (playerName) => {
+    return playerName.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase()).trim();
+  }
+  
+
 const renderBoard = (player) => {
+    const boardContainer = document.querySelector('.board-container');
+
+    const playerTag = document.createElement('div');
+    playerTag.classList.add('player-tag');
+    playerTag.id = (`${player.player}-tag`)
+    playerTag.innerText = formatPlayerName(player.player);
+    boardContainer.appendChild(playerTag);
+
     //Create the game boards
-    const container = document.querySelector('.board-container');
+    
     const playerBoard = document.createElement('div');
     playerBoard.classList.add('board');
     playerBoard.id = (`${player.player}Board`);
-    container.appendChild(playerBoard);
+    boardContainer.appendChild(playerBoard);
 
     populateGameBoard(player, playerBoard);
 };
@@ -56,22 +71,38 @@ const populateGameBoard = (player, playerBoard) => {
 };
     
 const renderDock = (ships) => {
-  const dock = document.querySelector('.dock');
-  ships.forEach(ship => {
-    const shipContainer = document.createElement('div');
-    shipContainer.classList.add('ship-container');
-    shipContainer.setAttribute('draggable', true);
-    shipContainer.id = ship.name;
-    shipContainer.shipData = ship;
-    dock.appendChild(shipContainer);
+
+    const dockContainer = document.createElement('div');
+    dockContainer.classList.add('dock-container');
+    gameContainer.appendChild(dockContainer)
+
+    const dock = document.createElement('div');
+    dock.classList.add('dock');
+    dockContainer.appendChild(dock);
+
+    const rotateBtn = document.createElement('button');
+    rotateBtn.id = 'rotate-button';
+    rotateBtn.classList.add('button');
+    const rotateIcon = document.createElement('img');
+
+    rotateBtn.appendChild(rotateIcon);
+    dockContainer.appendChild(rotateBtn);
     
-  
-    for (let i = 0; i < ship.length; i++) {
-      const shipSquare = document.createElement('div');
-      shipSquare.classList.add('shipSquare');
-      shipContainer.appendChild(shipSquare);
-    }
-  });
+    ships.forEach(ship => {
+        const shipContainer = document.createElement('div');
+        shipContainer.classList.add('ship-container');
+        shipContainer.setAttribute('draggable', true);
+        shipContainer.id = ship.name;
+        shipContainer.shipData = ship;
+        dock.appendChild(shipContainer);
+        
+    
+        for (let i = 0; i < ship.length; i++) {
+        const shipSquare = document.createElement('div');
+        shipSquare.classList.add('shipSquare');
+        shipContainer.appendChild(shipSquare);
+        }
+    });
 };
 
 const rotateDock = () => {
@@ -143,13 +174,7 @@ export const updateSquareDisplay = (attackResult, target) => {
     if (attackResult === 'miss'){
         target.style.background = 'white';
     } else if (attackResult === 'hit' || attackResult === 'sunk'){
-        const shipSquare = target.querySelector('.shipSquare');
-    
-        if (shipSquare) {
-        shipSquare.style.backgroundColor = 'red';
-        } else {
         target.style.background = 'red';
-        }
     }
 };
 

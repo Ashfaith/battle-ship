@@ -1,5 +1,5 @@
 const { Ship, Gameboard, Player, Computer, } = require('./modules');
-import { domContentLoader, playAgain, renderBoard, updateSquareDisplay } from'./display';
+import {playAgain, updateSquareDisplay, endGame } from'./display';
 
 
 export const createGameState = () => {
@@ -51,16 +51,19 @@ export const createGameState = () => {
     };
 };
 
+
 export const gameController = (playerOne, playerTwo) => {
+    const handleCellClick = (e) => {
+        // get the board selected
+        const board = e.target.closest('.board').id;
+        // send target cell and board
+        chooseCell(e.target, board);
+    }
+    
     // attach listeners to all cells
     const cells = document.querySelectorAll('.co-ord');
     cells.forEach(cell => {
-        cell.addEventListener('click', (e) => {
-            // get the board selected
-            const board = e.target.closest('.board').id;
-            // send target cell and board
-            chooseCell(e.target, board);
-        });
+        cell.addEventListener('click', handleCellClick)
     });
 
     // Initialize computer logic if playerTwo is the computer
@@ -137,9 +140,15 @@ export const gameController = (playerOne, playerTwo) => {
     };
 
     const gameOver = () => {
+        const cells = document.querySelectorAll('.co-ord');
+        cells.forEach(cell => {
+            cell.removeEventListener('click', handleCellClick);
+        });
         playAgain();
         console.log(`${activePlayer.player} wins`);
+
     };
+
 
     return {
         activePlayer,
