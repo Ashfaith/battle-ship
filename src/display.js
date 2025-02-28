@@ -1,11 +1,14 @@
 import { createGameState, gameController } from './controller';
+import rotateImg from './assets/svg/rotate-clockwise-svgrepo-com.svg'
 
 const gameContainer = document.querySelector('#game-container');
+const newGameButton = document.querySelector('#new-game');
 
 export const domContentLoader = () => {
+    newGameButton.remove();
     const gameState = createGameState();
     
-    renderDock(gameState.ships); //FIX THIS LINE, ASSIGN TO PLAYER 1
+    renderDock(gameState.ships);
     gameState.computerShipsRand();
 
     //generate board for each player
@@ -80,12 +83,13 @@ const renderDock = (ships) => {
     dock.classList.add('dock');
     dockContainer.appendChild(dock);
 
-    const rotateBtn = document.createElement('button');
+    const rotateBtn = document.createElement('div');
     rotateBtn.id = 'rotate-button';
     rotateBtn.classList.add('button');
-    const rotateIcon = document.createElement('img');
 
-    rotateBtn.appendChild(rotateIcon);
+    const imgElement = document.createElement('img');
+    imgElement.src = rotateImg;
+    rotateBtn.appendChild(imgElement);
     dockContainer.appendChild(rotateBtn);
     
     ships.forEach(ship => {
@@ -127,6 +131,8 @@ const rotateDock = () => {
 const dragShip = (gameState) => {
     const draggableShips = document.querySelectorAll('.ship-container');
     const playerBoard = document.querySelector('#playerOneBoard');
+    const dock = document.querySelector('.dock');
+    const dockContainer = document.querySelector('.dock-container');
 
     const handleDragStart = (e) => {
         e.dataTransfer.setData('text/plain', e.target.id);
@@ -165,9 +171,20 @@ const dragShip = (gameState) => {
             const rotateBtn = document.getElementById('rotate-button');
             rotateBtn.removeEventListener('click', shipElement.rotateHandler);
             shipElement.setAttribute('draggable', false);
+            console.log(dock.children.length);
+            if (dock.children.length <= 0) {
+                dockContainer.remove();
+                stateDisplay();
+            };
         });
     }
 };
+
+const stateDisplay = () => {
+    const stateDisplayCont = document.createElement('div');
+    stateDisplayCont.id = 'state-display-container';
+    gameContainer.prepend(stateDisplayCont);
+}
 
 
 export const updateSquareDisplay = (attackResult, target) => {
