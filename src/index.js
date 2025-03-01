@@ -7,5 +7,3 @@ const newGameButton = document.querySelector('#new-game');
 newGameButton.addEventListener('click', () => {
     domContentLoader();
 });
-
-//test

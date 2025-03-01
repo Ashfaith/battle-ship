@@ -1,6 +1,6 @@
 body {
-    background-color: rebeccapurple;
-  }
+  background-color: rebeccapurple;
+}
 
 .row {
   display: flex;
@@ -10,7 +10,6 @@ body {
 #game-container {
   border: solid 1px yellow;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -28,6 +27,7 @@ body {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr;
   gap: 10px;
+  order: 2;
 }
 
 #playerOne-tag {
@@ -37,7 +37,7 @@ body {
   grid-row-end: 2;
 }
 
-#computer-tag {
+#computer-tag, #dock-tag {
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 1;
@@ -45,14 +45,14 @@ body {
   justify-self: end;
 }
 
-#playerBoard {
+#playerOneBoard {
   grid-column-start: 1;
   grid-column-end: 2;
-  grid-row-start: 1;
-  grid-row-end: 2;
-}
+  grid-row-start: 2;
+  grid-row-end: 3;
+  }
 
-#computerBoard {
+#computerBoard, .dock-container {
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 2;
@@ -88,7 +88,7 @@ body {
   height: 40px;
   border: 2px solid black;
   box-sizing: border-box;
-  position: relative; 
+  position: relative;
   transform-style: preserve-3d; /*keeps styling for game-board square on top*/
 }
 
@@ -97,7 +97,7 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 0; 
+  gap: 0;
   height: fit-content;
   width: fit-content;
   transform: translateZ(-10px); /*keeps styling for ships under gameboard so hit markers are displayed over top*/
@@ -112,7 +112,7 @@ body {
   width: 40px;
   height: 40px;
   background-color: black;
-  box-sizing: border-box; 
+  box-sizing: border-box;
   border: 2px solid transparent;
 }
 
@@ -134,4 +134,34 @@ body {
   width: 300px;
 }
 
+.state-display-container {
+  height: 450px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
 
+.left {
+  order: 1;
+}
+
+.right {
+  order: 3;
+  align-items: end;
+}
+
+.player-ship-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 0;
+  height: fit-content;
+  width: fit-content;
+}
+
+.ship-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-align: center;
+}

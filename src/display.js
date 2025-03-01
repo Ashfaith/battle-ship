@@ -7,18 +7,17 @@ const newGameButton = document.querySelector('#new-game');
 export const domContentLoader = () => {
     newGameButton.remove();
     const gameState = createGameState();
+
+    renderBoardContainer();
+    
+    // render the player board initially
+    renderBoard(gameState.playerOne);
     
     renderDock(gameState.ships);
-    gameState.computerShipsRand();
-
-    //generate board for each player
-    renderBoardContainer();
-    renderBoard(gameState.playerOne);
-    renderBoard(gameState.playerTwo);
     dragShip(gameState);
     rotateDock();
-
-    gameController(gameState.playerOne, gameState.playerTwo);
+    
+    gameState.computerShipsRand();
 }
 
 let direction = 'vertical';
@@ -32,9 +31,8 @@ const renderBoardContainer = () => {
 
 const formatPlayerName = (playerName) => {
     return playerName.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase()).trim();
-  }
+}
   
-
 const renderBoard = (player) => {
     const boardContainer = document.querySelector('.board-container');
 
@@ -45,7 +43,6 @@ const renderBoard = (player) => {
     boardContainer.appendChild(playerTag);
 
     //Create the game boards
-    
     const playerBoard = document.createElement('div');
     playerBoard.classList.add('board');
     playerBoard.id = (`${player.player}Board`);
@@ -74,10 +71,18 @@ const populateGameBoard = (player, playerBoard) => {
 };
     
 const renderDock = (ships) => {
+    const boardContainer = document.querySelector('.board-container');
+    
+    const dockTag = document.createElement('div');
+    dockTag.classList.add('player-tag');
+    dockTag.id = 'dock-tag';
+    dockTag.innerText = 'Place Your Ships';
+    boardContainer.appendChild(dockTag);
 
     const dockContainer = document.createElement('div');
     dockContainer.classList.add('dock-container');
-    gameContainer.appendChild(dockContainer)
+    dockContainer.classList.add('board'); 
+    boardContainer.appendChild(dockContainer);
 
     const dock = document.createElement('div');
     dock.classList.add('dock');
@@ -100,7 +105,6 @@ const renderDock = (ships) => {
         shipContainer.shipData = ship;
         dock.appendChild(shipContainer);
         
-    
         for (let i = 0; i < ship.length; i++) {
         const shipSquare = document.createElement('div');
         shipSquare.classList.add('shipSquare');
@@ -133,6 +137,7 @@ const dragShip = (gameState) => {
     const playerBoard = document.querySelector('#playerOneBoard');
     const dock = document.querySelector('.dock');
     const dockContainer = document.querySelector('.dock-container');
+    const dockTag = document.getElementById('dock-tag');
 
     const handleDragStart = (e) => {
         e.dataTransfer.setData('text/plain', e.target.id);
@@ -142,13 +147,10 @@ const dragShip = (gameState) => {
         ship.addEventListener('dragstart', handleDragStart);
     });
 
-    
     for (const playerSquares of playerBoard.querySelectorAll('.co-ord')) {
         playerSquares.addEventListener('dragover', e => {
             e.preventDefault();
-            
         });
-
         
         playerSquares.addEventListener('drop', e => {
             e.preventDefault();
@@ -157,7 +159,6 @@ const dragShip = (gameState) => {
             const ship = shipElement.shipData;
 
             const startCoord = playerSquares.id.split(' ').map(coord => parseInt(coord));
-            
             
             const placed = gameState.playerOne.gameBoard.placeShip(direction, startCoord[0], startCoord[1], ship);
 
@@ -171,21 +172,67 @@ const dragShip = (gameState) => {
             const rotateBtn = document.getElementById('rotate-button');
             rotateBtn.removeEventListener('click', shipElement.rotateHandler);
             shipElement.setAttribute('draggable', false);
-            console.log(dock.children.length);
+            
             if (dock.children.length <= 0) {
                 dockContainer.remove();
-                stateDisplay();
+                dockTag.remove();
+                //render comp board after ships are placed
+                renderBoard(gameState.playerTwo);
+                gameController(gameState.playerOne, gameState.playerTwo);
+                stateDisplay(gameState);
             };
         });
     }
 };
 
-const stateDisplay = () => {
-    const stateDisplayCont = document.createElement('div');
-    stateDisplayCont.id = 'state-display-container';
-    gameContainer.prepend(stateDisplayCont);
-}
-
+const stateDisplay = (gameState) => {
+    
+    const stateDisplayContLeft = document.createElement('div');
+    stateDisplayContLeft.classList.add('state-display-container');
+    stateDisplayContLeft.classList.add('left');
+    gameContainer.appendChild(stateDisplayContLeft);
+    
+    const stateDisplayContRight = document.createElement('div');
+    stateDisplayContRight.classList.add('state-display-container');
+    stateDisplayContRight.classList.add('right');
+    gameContainer.appendChild(stateDisplayContRight);
+    
+    const players = [gameState.playerOne, gameState.playerTwo];
+    players.forEach(player => {
+      const ships = player.gameBoard.ships;
+      ships.forEach(ship => {
+        const shipContainer = document.createElement('div');
+        shipContainer.classList.add('ship-container');
+        
+        const shipName = document.createElement('div');
+        shipName.classList.add('ship-name');
+        shipName.textContent = String(ship.name).charAt(0).toUpperCase() + String(ship.name).slice(1);
+        shipContainer.appendChild(shipName);
+        
+        const playerShipStatus = document.createElement('div');
+        playerShipStatus.classList.add('player-ship-status');
+        playerShipStatus.id = ship.name;
+        playerShipStatus.shipData = ship;
+        shipContainer.appendChild(playerShipStatus);
+        
+        function renderEachship() {
+          for (let i = 0; i < ship.length; i++) {
+            const shipSquare = document.createElement('div');
+            shipSquare.classList.add('shipSquare');
+            playerShipStatus.appendChild(shipSquare);
+          }
+        }
+        
+        if (player.player === 'playerOne') {
+          renderEachship();
+          stateDisplayContLeft.appendChild(shipContainer);
+        } else {
+          renderEachship();
+          stateDisplayContRight.appendChild(shipContainer);
+        }
+      });
+    });
+  };
 
 export const updateSquareDisplay = (attackResult, target) => {
     if (attackResult === 'miss'){
