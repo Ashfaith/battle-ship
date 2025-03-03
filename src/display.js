@@ -258,4 +258,7 @@ export const playAgain = () => {
     const playAgainBtn = document.createElement('button');
     playAgainBtn.innerText = 'Play again?';
     document.body.appendChild(playAgainBtn);
+    playAgainBtn.addEventListener('click', () => {
+        window.location.reload();
+    });
 };

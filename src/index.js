@@ -1,5 +1,3 @@
-console.log('app.js loaded');
-
 import  { domContentLoader } from'./display';
 import "./styles.css";
 

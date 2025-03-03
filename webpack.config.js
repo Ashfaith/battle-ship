@@ -1,6 +1,5 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-
 module.exports = {
   mode: "development",
   entry: "./src/index.js",
@@ -11,10 +10,10 @@ module.exports = {
   },
   devServer: {
     static: {
-      directory: path.resolve(__dirname, 'dist'), 
+      directory: path.resolve(__dirname, 'dist'),
     },
-    port: 8080, 
-    open: true, 
+    port: 8080,
+    open: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -36,7 +35,13 @@ module.exports = {
         test: /\.svg$/,
         type: 'asset/resource',
       },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext][query]',
+        },
+      },
     ],
   },
 };
-
