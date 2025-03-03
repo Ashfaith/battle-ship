@@ -93,27 +93,30 @@ export const gameController = (playerOne, playerTwo) => {
         const cellArray = cellId.split(' ').map(Number);
         // send attack to player
         const attackResult = attackHandler(otherPlayer,cellArray, selectedBoard, cellId);
+        console.log(attackResult.result);
+        const resultString = attackResult.result;
+        const shipAttacked = attackResult.ship
 
-        if (attackResult === 'go again') {
+        if (resultString === 'go again') {
             if (activePlayer.player === 'computer' && computer){
-                computer.updateLastAttackResult(attackResult);
+                computer.updateLastAttackResult(resultString);
                 computerTurnHandler();
             }
             return;
         }
 
         if (activePlayer === playerTwo && playerTwo.player === 'computer') {
-            computer.updateLastAttackResult(attackResult);
+            computer.updateLastAttackResult(resultString);
         } 
         
         gameStatus(otherPlayer);
-        updateSquareDisplay(attackResult, selectedCell);
+        updateSquareDisplay(resultString, selectedCell, shipAttacked);
         switchPlayer();
     };
 
     const attackHandler = (otherPlayer, cellArray, selectedBoard, cellId) => {
         if (checkAttackValid(otherPlayer, selectedBoard, cellId) === false) {
-            return 'go again';
+            return { result: 'go again', ship: null };
         };
         otherPlayer.cellsReceived.push(cellId);
         return otherPlayer.gameBoard.receiveAttack(cellArray);

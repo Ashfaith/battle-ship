@@ -211,7 +211,7 @@ const stateDisplay = (gameState) => {
         
         const playerShipStatus = document.createElement('div');
         playerShipStatus.classList.add('player-ship-status');
-        playerShipStatus.id = ship.name;
+        playerShipStatus.id = `${ship.name}-${player.player}`;
         playerShipStatus.shipData = ship;
         shipContainer.appendChild(playerShipStatus);
         
@@ -234,13 +234,25 @@ const stateDisplay = (gameState) => {
     });
   };
 
-export const updateSquareDisplay = (attackResult, target) => {
+export const updateSquareDisplay = (attackResult, target, shipAttacked) => {
     if (attackResult === 'miss'){
         target.style.background = 'white';
     } else if (attackResult === 'hit' || attackResult === 'sunk'){
         target.style.background = 'red';
+        const trackerName = `${shipAttacked.name}-${target.closest('.board').id}`.slice(0, -5);
+        console.log(trackerName);
+        const targetedTracker = document.getElementById(trackerName);
+        const shipSquares = targetedTracker.querySelectorAll('.shipSquare');
+        const hitCount = shipAttacked.hits;
+
+        if (hitCount <= shipSquares.length) {
+            for (let i = 0; i < hitCount; i++) {
+                shipSquares[i].style.background = 'red';
+            };
+        }
     }
 };
+
 
 export const playAgain = () => {
     const playAgainBtn = document.createElement('button');

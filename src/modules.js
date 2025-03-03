@@ -84,10 +84,17 @@ class Gameboard {
         let target = this.board[row][col];
 
         if (target !== null){
-            return target.receivedHits();
+          const result = target.receivedHits()
+            return {
+              result: result,
+              ship: target
+            } 
         } else {
             this.board[row][col] = 'miss';
-            return 'miss';
+            return {
+              result: 'miss',
+              ship: null
+            }
         }
     }
 
@@ -161,7 +168,6 @@ class Computer extends Player {
         else {
             this.randAttack();
         }
-        console.log(this.choice);
     }
 
     randAttack() {
