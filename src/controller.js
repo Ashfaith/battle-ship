@@ -1,5 +1,5 @@
 const { Ship, Gameboard, Player, Computer, } = require('./modules');
-import {playAgain, updateSquareDisplay, endGame } from'./display';
+import {endGame, playAgain, updateSquareDisplay} from'./display';
 
 
 export const createGameState = () => {
@@ -147,9 +147,8 @@ export const gameController = (playerOne, playerTwo) => {
         cells.forEach(cell => {
             cell.removeEventListener('click', handleCellClick);
         });
-        playAgain();
-        console.log(`${activePlayer.player} wins`);
-
+        const winner = `${activePlayer.player}`
+        endGame(winner);
     };
 
 

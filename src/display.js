@@ -3,6 +3,7 @@ import rotateImg from './assets/svg/rotate-clockwise-svgrepo-com.svg'
 
 const gameContainer = document.querySelector('#game-container');
 const newGameButton = document.querySelector('#new-game');
+const infoContainer = document.querySelector('#info-container');
 
 export const domContentLoader = () => {
     newGameButton.remove();
@@ -15,12 +16,9 @@ export const domContentLoader = () => {
     
     renderDock(gameState.ships);
     dragShip(gameState);
-    rotateDock();
     
     gameState.computerShipsRand();
 }
-
-let direction = 'vertical';
 
 const renderBoardContainer = () => {
     //create container for both boards
@@ -111,25 +109,38 @@ const renderDock = (ships) => {
         shipContainer.appendChild(shipSquare);
         }
     });
+    rotateDock();
 };
+
+let direction = 'vertical';
 
 const rotateDock = () => {
     const rotateBtn = document.getElementById('rotate-button');
     const dock = document.querySelector('.dock');
     const ships = dock.querySelectorAll('.ship-container');
 
-    ships.forEach(ship => {
+       
     const rotateHandler = () => {
-        const isVertical = 'vertical' === 'vertical' ? 'horizontal' : 'vertical';
-        ship.classList.toggle(isVertical);
-        dock.classList.toggle(isVertical);
-        direction = isVertical;
-    };
+        direction = direction === 'vertical' ? 'horizontal' : 'vertical';
+        console.log(direction);
 
+        if (direction === 'horizontal'){ 
+            dock.classList.add('horizontal');
+        } else {
+            dock.classList.remove('horizontal');
+        };
+
+        ships.forEach(ship => {
+            if (ship.getAttribute('draggable') === 'true') {
+                if (direction === 'horizontal'){ 
+                    ship.classList.add('horizontal');
+                } else {
+                    ship.classList.remove('horizontal');
+                }
+            }
+        });
+    }
     rotateBtn.addEventListener('click', rotateHandler);
-        
-    ship.rotateHandler = rotateHandler;
-    });
 };
 
 const dragShip = (gameState) => {
@@ -169,9 +180,10 @@ const dragShip = (gameState) => {
             playerSquares.appendChild(shipElement);
 
             shipElement.removeEventListener('dragstart', handleDragStart);
+            shipElement.setAttribute('draggable', false);
             const rotateBtn = document.getElementById('rotate-button');
             rotateBtn.removeEventListener('click', shipElement.rotateHandler);
-            shipElement.setAttribute('draggable', false);
+            
             
             if (dock.children.length <= 0) {
                 dockContainer.remove();
@@ -203,6 +215,7 @@ const stateDisplay = (gameState) => {
       ships.forEach(ship => {
         const shipContainer = document.createElement('div');
         shipContainer.classList.add('ship-container');
+        shipContainer.classList.add('tracker');
         
         const shipName = document.createElement('div');
         shipName.classList.add('ship-name');
@@ -219,6 +232,7 @@ const stateDisplay = (gameState) => {
           for (let i = 0; i < ship.length; i++) {
             const shipSquare = document.createElement('div');
             shipSquare.classList.add('shipSquare');
+            shipSquare.classList.add('tracker');
             playerShipStatus.appendChild(shipSquare);
           }
         }
@@ -240,7 +254,6 @@ export const updateSquareDisplay = (attackResult, target, shipAttacked) => {
     } else if (attackResult === 'hit' || attackResult === 'sunk'){
         target.style.background = 'red';
         const trackerName = `${shipAttacked.name}-${target.closest('.board').id}`.slice(0, -5);
-        console.log(trackerName);
         const targetedTracker = document.getElementById(trackerName);
         const shipSquares = targetedTracker.querySelectorAll('.shipSquare');
         const hitCount = shipAttacked.hits;
@@ -253,11 +266,28 @@ export const updateSquareDisplay = (attackResult, target, shipAttacked) => {
     }
 };
 
+const displayWinner = (winner) => {
 
-export const playAgain = () => {
+    const winnerDisplay = document.createElement('div');
+    winnerDisplay.id = 'winner-display';
+    infoContainer.appendChild(winnerDisplay);
+
+    const winnerText = document.createElement('h3');
+    winnerText.innerText = winner;
+    winnerDisplay.appendChild(winnerText);
+}
+
+
+export const endGame = (winner) => {
+    const formattedWinner = formatPlayerName(winner);
+    const winnerMessage = `${formattedWinner} wins!`
+    displayWinner(winnerMessage);
+
+
     const playAgainBtn = document.createElement('button');
     playAgainBtn.innerText = 'Play again?';
-    document.body.appendChild(playAgainBtn);
+    playAgainBtn.classList.add('start-end-button');
+    infoContainer.appendChild(playAgainBtn);
     playAgainBtn.addEventListener('click', () => {
         window.location.reload();
     });
